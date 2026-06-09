@@ -21,16 +21,20 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/push', pushRoutes);
 
+import Database from './utils/Database.js';
+
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/techcart';
 
-mongoose.connect(MONGO_URI)
+// Singleton Implementation
+const db = Database.getInstance();
+
+db.connect(MONGO_URI)
   .then(() => {
-    console.log('Connected to local MongoDB');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   })
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .catch((err) => console.error('Failed to start server:', err));
 
 export default app;
